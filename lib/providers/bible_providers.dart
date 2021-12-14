@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:foutain_desktop/models/bible_mdl.dart';
 import 'package:foutain_desktop/utils/enums.dart';
+import 'package:universal_html/parsing.dart';
 
 import 'general_providers.dart';
 
@@ -11,11 +12,20 @@ final getBChaptersProvider =
     StateNotifierProvider.family<GetBibleBkChaptersNotifier, List<Bible>, int>(
         (ref, int book) => GetBibleBkChaptersNotifier(ref, book));
 
-final setBbleVrsesProvider =
-    StateNotifierProvider.family<GetBibleVrsesNotifier, List<Bible>, Bible>(
-        (ref, bible) => GetBibleVrsesNotifier(ref, bible));
+// final setBbleVrsesProvider =
+//     StateNotifierProvider.family<GetBibleVrsesNotifier, List<Bible>, Bible>(
+//         (ref, bible) => GetBibleVrsesNotifier(ref, bible));
 
-final getVrsesProvider = StateProvider<List<Bible>>((ref) => []);
+final setBibleProvider = StateProvider<Bible?>((ref) => null);
+final bibleVerseFlScrnProvider = StateProvider<Bible?>((ref) => null);
+
+final getVrsesProvider =
+    StateNotifierProvider<GetBibleVrsesNotifier, AsyncValue<List<Bible>>>(
+        (ref) {
+  final bible = ref.watch(setBibleProvider);
+  print(bible!.chapter);
+  return GetBibleVrsesNotifier(ref, bible);
+});
 
 class GetBooksNotifier extends StateNotifier<List<Bible>> {
   GetBooksNotifier(this._ref) : super([]) {
@@ -54,14 +64,19 @@ class GetBibleBkChaptersNotifier extends StateNotifier<List<Bible>> {
   }
 }
 
-class GetBibleVrsesNotifier extends StateNotifier<List<Bible>> {
-  GetBibleVrsesNotifier(this._ref, this._bible) : super([]) {
+class GetBibleVrsesNotifier extends StateNotifier<AsyncValue<List<Bible>>> {
+  GetBibleVrsesNotifier(this._ref, this._bible)
+      : super(const AsyncValue.loading()) {
     getVerses();
   }
   final Ref _ref;
   final Bible _bible;
 
   void getVerses() async {
-    state = await _ref.watch(databaseProvider).getChaptVrss(_bible);
+    List<Bible> verses =
+        await _ref.watch(databaseProvider).getChaptVrss(_bible);
+    state = AsyncData(verses);
   }
 }
+
+//final htmlDoc = parseHtmlDocument(content)

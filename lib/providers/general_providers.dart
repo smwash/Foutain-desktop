@@ -14,3 +14,6 @@ final databaseProvider = StateProvider<LocalDB>((ref) => LocalDB());
 
 final favbkmarkProvider =
     StateProvider<FavMarkSelector>((ref) => FavMarkSelector.initial);
+
+final mainScreenStateProvider =
+    StateProvider<ScreenState>((ref) => ScreenState.initial);

@@ -41,48 +41,49 @@ class _SongCardState extends ConsumerState<SongCard> {
                       ),
                       child: MouseRegion(
                         child: ListTile(
-                            dense: true,
-                            tileColor: Colors.white,
-                            leading: CircleAvatar(
-                              backgroundColor: Theme.of(context)
-                                  .primaryColor
-                                  .withOpacity(0.17),
-                              child: Text(
-                                catsong.sngNumber.toString(),
-                                style: TextStyle(
-                                  fontSize: 15.sp,
-                                  color: Theme.of(context).primaryColor,
-                                  fontWeight: FontWeight.w600,
-                                ),
+                          dense: true,
+                          tileColor: Colors.white,
+                          leading: CircleAvatar(
+                            backgroundColor: Theme.of(context)
+                                .primaryColor
+                                .withOpacity(0.17),
+                            child: Text(
+                              catsong.sngNumber.toString(),
+                              style: TextStyle(
+                                fontSize: 15.sp,
+                                color: Theme.of(context).primaryColor,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
-                            title: Text(catsong.title
-                                .toLowerCase()
-                                .capitalizeFirstofEach),
-                            subtitle: Text(catsong.verse),
-                            trailing: IconButton(
-                              color: catsong.isFavorite == 1
-                                  ? Theme.of(context).primaryColor
-                                  : Theme.of(context)
-                                      .primaryColor
-                                      .withOpacity(0.8),
-                              icon: Icon(
-                                  catsong.isFavorite == 1
-                                      ? Icons.favorite
-                                      : Icons.favorite_outline,
-                                  size: 20.sp),
-                              onPressed: () async {
-                                await ref
-                                    .read(songsListStateProvider.notifier)
-                                    .updateSong(catsong.copyWith(
-                                        isFavorite:
-                                            catsong.isFavorite == 1 ? 0 : 1));
-                              },
-                            ),
-                            onTap: () async {
-                              ref.read(widescrnstateProvider.notifier).state =
-                                  WideScrnState.song;
-                            }),
+                          ),
+                          title: Text(catsong.title
+                              .toLowerCase()
+                              .capitalizeFirstofEach),
+                          subtitle: Text(catsong.verse),
+                          trailing: IconButton(
+                            color: catsong.isFavorite == 1
+                                ? Theme.of(context).primaryColor
+                                : Theme.of(context)
+                                    .primaryColor
+                                    .withOpacity(0.8),
+                            icon: Icon(
+                                catsong.isFavorite == 1
+                                    ? Icons.favorite
+                                    : Icons.favorite_outline,
+                                size: 20.sp),
+                            onPressed: () async {
+                              await ref
+                                  .read(songsListStateProvider.notifier)
+                                  .updateSong(catsong.copyWith(
+                                      isFavorite:
+                                          catsong.isFavorite == 1 ? 0 : 1));
+                            },
+                          ),
+                          onTap: () async {
+                            ref.read(widescrnstateProvider.notifier).state =
+                                WideScrnState.song;
+                          },
+                        ),
                       ),
                     );
                   },

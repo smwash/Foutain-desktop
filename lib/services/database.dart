@@ -79,99 +79,99 @@ class LocalDB {
         "ALTER TABLE ${dbHelper.bibleTbl} ADD COLUMN isHighlighted INTEGER;");
   }
 
-  Future<List<Song>> getSongs(MenuSelector select) async {
-    List<Song> songs = [];
-    if (select == MenuSelector.hymn) {
-      songs = await getSongsByCategory('Hymn Book');
-    }
-    if (select == MenuSelector.injili) {
-      songs = await getSongsByCategory('Nyimbo Za Injili');
-    }
-    if (select == MenuSelector.tenzi) {
-      songs = await getSongsByCategory('Tenzi Za Rohoni');
-    }
-    if (select == MenuSelector.kikuyu) {
-      songs = await getSongsByCategory('Nyimbo Cia Kiroho');
-    }
-    if (select == MenuSelector.enyimba) {
-      songs = await getSongsByCategory('Enyimba Za Kristo');
-    }
-    return songs;
-  }
+  // Future<List<Song>> getSongs(MenuSelector select) async {
+  //   List<Song> songs = [];
+  //   if (select == MenuSelector.hymn) {
+  //     songs = await getSongsByCategory('Hymn Book');
+  //   }
+  //   if (select == MenuSelector.injili) {
+  //     songs = await getSongsByCategory('Nyimbo Za Injili');
+  //   }
+  //   if (select == MenuSelector.tenzi) {
+  //     songs = await getSongsByCategory('Tenzi Za Rohoni');
+  //   }
+  //   if (select == MenuSelector.kikuyu) {
+  //     songs = await getSongsByCategory('Nyimbo Cia Kiroho');
+  //   }
+  //   if (select == MenuSelector.enyimba) {
+  //     songs = await getSongsByCategory('Enyimba Za Kristo');
+  //   }
+  //   return songs;
+  // }
 
-  Future<void> insertSong(Song song) async {
-    Database db = await database;
-    await db.insert(dbHelper.songsTbl, song.toMap(),
-        conflictAlgorithm: ConflictAlgorithm.replace);
-  }
+  // Future<void> insertSong(Song song) async {
+  //   Database db = await database;
+  //   await db.insert(dbHelper.songsTbl, song.toMap(),
+  //       conflictAlgorithm: ConflictAlgorithm.replace);
+  // }
 
-  Future<List<Song>> getAllSongs() async {
-    Database db = await database;
-    List<Map<String, dynamic>> result = await db.query(dbHelper.songsTbl);
-    List<Song> songs = result.map((e) => Song.fromMap(e)).toList();
-    return songs;
-  }
+  // Future<List<Song>> getAllSongs() async {
+  //   Database db = await database;
+  //   List<Map<String, dynamic>> result = await db.query(dbHelper.songsTbl);
+  //   List<Song> songs = result.map((e) => Song.fromMap(e)).toList();
+  //   return songs;
+  // }
 
-  Future<List<Song>> getSongsByVrs(int songId, String cat) async {
-    Database db = await database;
-    List<Map<String, dynamic>> result = await db.query(
-      dbHelper.songsTbl,
-      where: 'songId = ? and category = ?',
-      groupBy: 'vrsNumber',
-      whereArgs: [songId, cat],
-    );
-    List<Song> songs = result.map((e) => Song.fromMap(e)).toList();
-    return songs;
-  }
+  // Future<List<Song>> getSongsByVrs(int songId, String cat) async {
+  //   Database db = await database;
+  //   List<Map<String, dynamic>> result = await db.query(
+  //     dbHelper.songsTbl,
+  //     where: 'songId = ? and category = ?',
+  //     groupBy: 'vrsNumber',
+  //     whereArgs: [songId, cat],
+  //   );
+  //   List<Song> songs = result.map((e) => Song.fromMap(e)).toList();
+  //   return songs;
+  // }
 
-  Future<List<Song>> getSongsById(int songId, String cat) async {
-    try {
-      Database db = await database;
-      List<Map<String, dynamic>> result = await db.query(dbHelper.songsTbl,
-          where: 'songId = ? and category = ?', whereArgs: [songId, cat]);
-      List<Song> songs = result.map((e) => Song.fromMap(e)).toList();
-      return songs;
-    } catch (e) {
-      throw Exception(e);
-    }
-  }
+  // Future<List<Song>> getSongsById(int songId, String cat) async {
+  //   try {
+  //     Database db = await database;
+  //     List<Map<String, dynamic>> result = await db.query(dbHelper.songsTbl,
+  //         where: 'songId = ? and category = ?', whereArgs: [songId, cat]);
+  //     List<Song> songs = result.map((e) => Song.fromMap(e)).toList();
+  //     return songs;
+  //   } catch (e) {
+  //     throw Exception(e);
+  //   }
+  // }
 
-  Future<List<Song>> getSongsByCategory(String cat) async {
-    try {
-      Database db = await database;
-      List<Map<String, dynamic>> result = await db
-          .query(dbHelper.songsTbl, where: 'category = ?', whereArgs: [cat]);
-      List<Song> songs = result.map((e) => Song.fromMap(e)).toList();
-      return songs;
-    } catch (e) {
-      throw Exception(e);
-    }
-  }
+  // Future<List<Song>> getSongsByCategory(String cat) async {
+  //   try {
+  //     Database db = await database;
+  //     List<Map<String, dynamic>> result = await db
+  //         .query(dbHelper.songsTbl, where: 'category = ?', whereArgs: [cat]);
+  //     List<Song> songs = result.map((e) => Song.fromMap(e)).toList();
+  //     return songs;
+  //   } catch (e) {
+  //     throw Exception(e);
+  //   }
+  // }
 
-  Future<void> updateSong(Song sng) async {
-    Database db = await database;
-    await db.update(
-      dbHelper.songsTbl,
-      sng.toMap(),
-      where: 'id = ${sng.id}',
-    );
-  }
+  // Future<void> updateSong(Song sng) async {
+  //   Database db = await database;
+  //   await db.update(
+  //     dbHelper.songsTbl,
+  //     sng.toMap(),
+  //     where: 'id = ${sng.id}',
+  //   );
+  // }
 
-  Future<List<Song>> getFavSongs() async {
-    Database db = await database;
-    List<Map<String, dynamic>> result = await db.query(dbHelper.songsTbl,
-        where: 'isFavorite = 1', groupBy: 'category');
-    List<Song> songs = result.map((e) => Song.fromMap(e)).toList();
-    return songs;
-  }
+  // Future<List<Song>> getFavSongs() async {
+  //   Database db = await database;
+  //   List<Map<String, dynamic>> result = await db.query(dbHelper.songsTbl,
+  //       where: 'isFavorite = 1', groupBy: 'category');
+  //   List<Song> songs = result.map((e) => Song.fromMap(e)).toList();
+  //   return songs;
+  // }
 
-  Future<List<Song>> getFavSongsByCat(String cat) async {
-    Database db = await database;
-    List<Map<String, dynamic>> result = await db.query(dbHelper.songsTbl,
-        where: 'isFavorite = 1 and category = ?', whereArgs: [cat]);
-    List<Song> songs = result.map((e) => Song.fromMap(e)).toList();
-    return songs;
-  }
+  // Future<List<Song>> getFavSongsByCat(String cat) async {
+  //   Database db = await database;
+  //   List<Map<String, dynamic>> result = await db.query(dbHelper.songsTbl,
+  //       where: 'isFavorite = 1 and category = ?', whereArgs: [cat]);
+  //   List<Song> songs = result.map((e) => Song.fromMap(e)).toList();
+  //   return songs;
+  // }
 
   //BIBILE
   Future<List<Bible>> getOldTest(int st, ed) async {
