@@ -95,11 +95,11 @@ class Bible {
       chapter: map['chapter'],
       bkNumber: map['bkNumber'],
       bkName: map['bkName'],
-      hasNotes: map['hasNotes'] != null ? map['hasNotes'] : 0,
+      hasNotes: map['hasNotes'] ?? 0,
       notes: map['notes'] ?? '',
-      isBkMarked: map['isBkMarked'] != null ? map['isBkMarked'] : 0,
+      isBkMarked: map['isBkMarked'] ?? 0,
       hlgtColor: map['hlgtColor'] != null ? Color(map['hlgtColor']) : null,
-      isHighlighted: map['isHighlighted'] != null ? map['isHighlighted'] : 0,
+      isHighlighted: map['isHighlighted'] ?? 0,
       ntDtCreated: map['ntDtCreated'] != null
           ? DateTime.fromMillisecondsSinceEpoch(map['ntDtCreated'])
           : null,

@@ -132,22 +132,25 @@ class SongsListNotifier extends StateNotifier<AsyncValue<List<Song>>> {
 }
 
 //SONG DETAIL
-final songDetailProvider =
-    StateNotifierProvider<SongDetailNotifier, AsyncValue<List<Song>>>((ref) {
-  return SongDetailNotifier(ref.read);
+final songSetterProvider = StateProvider<Song?>((ref) => null);
+
+final songdetailProvider = Provider<List<Song>>((ref) {
+  final song = ref.watch(songSetterProvider);
+  final songListState = ref.watch(songsListStateProvider);
+  return songListState.maybeWhen(
+      data: (songs) {
+        return songs
+            .where(
+                (e) => e.songId == song!.songId && e.category == song.category)
+            .toList();
+      },
+      orElse: () => []);
 });
 
-class SongDetailNotifier extends StateNotifier<AsyncValue<List<Song>>> {
-  SongDetailNotifier(this._read) : super(const AsyncValue.loading());
-  final Reader _read;
+final verseCountProvider = StateProvider<int>((ref) => 1);
 
-  Future<void> setSongDetail(Song s) async {
-    try {
-      List<Song> songs = await _read(songsRepositoryProvider)
-          .getSongsById(s.songId, s.category);
-      state = AsyncData(songs);
-    } on Exception catch (e) {
-      state = AsyncValue.error(e);
-    }
-  }
-}
+final songVersesProvider = Provider<List<Song>>((ref) {
+  final verse = ref.watch(verseCountProvider);
+  final songListState = ref.watch(songdetailProvider);
+  return songListState.where((e) => e.vrsNumber == verse).toList();
+});

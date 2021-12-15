@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:foutain_desktop/models/bible_mdl.dart';
 import 'package:foutain_desktop/utils/enums.dart';
-import 'package:universal_html/parsing.dart';
 
 import 'general_providers.dart';
 
@@ -17,15 +16,36 @@ final getBChaptersProvider =
 //         (ref, bible) => GetBibleVrsesNotifier(ref, bible));
 
 final setBibleProvider = StateProvider<Bible?>((ref) => null);
-final bibleVerseFlScrnProvider = StateProvider<Bible?>((ref) => null);
+//final bibleVerseFlScrnProvider = StateProvider<Bible?>((ref) => null);
 
 final getVrsesProvider =
     StateNotifierProvider<GetBibleVrsesNotifier, AsyncValue<List<Bible>>>(
         (ref) {
   final bible = ref.watch(setBibleProvider);
-  print(bible!.chapter);
-  return GetBibleVrsesNotifier(ref, bible);
+  return GetBibleVrsesNotifier(ref, bible!);
 });
+
+final bibleProvider = StateNotifierProvider<SetBibleNotifier, Bible?>(
+    (ref) => SetBibleNotifier());
+final bibleversesProvider =
+    StateNotifierProvider<SetBibleVrsesNotifier, List<Bible>>(
+        (ref) => SetBibleVrsesNotifier());
+
+class SetBibleNotifier extends StateNotifier<Bible?> {
+  SetBibleNotifier() : super(null);
+
+  void setBible(Bible b) {
+    state = b;
+  }
+}
+
+class SetBibleVrsesNotifier extends StateNotifier<List<Bible>> {
+  SetBibleVrsesNotifier() : super([]);
+
+  void setBible(List<Bible> b) {
+    state = b;
+  }
+}
 
 class GetBooksNotifier extends StateNotifier<List<Bible>> {
   GetBooksNotifier(this._ref) : super([]) {

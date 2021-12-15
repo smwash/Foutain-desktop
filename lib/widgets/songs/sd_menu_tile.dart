@@ -13,6 +13,7 @@ class MousedListTile extends ConsumerWidget {
   }) : super(key: key);
   final String label;
   final Function onTap;
+
   final MenuSelector menuSelector;
 
   @override

@@ -15,6 +15,7 @@ class SongCard extends ConsumerStatefulWidget {
 }
 
 class _SongCardState extends ConsumerState<SongCard> {
+  final ScrollController _scrollController = ScrollController();
   @override
   Widget build(BuildContext context) {
     final songsprovider = ref.watch(songsListStateProvider);
@@ -26,10 +27,11 @@ class _SongCardState extends ConsumerState<SongCard> {
                 child: Text('No record found'),
               )
             : Scrollbar(
+                controller: _scrollController,
                 isAlwaysShown: true,
                 child: ListView.builder(
                   itemCount: filteredSongs.length,
-                  primary: false,
+                  controller: _scrollController,
                   key: const PageStorageKey<String>('Sng_Lst'),
                   itemBuilder: (BuildContext context, int index) {
                     Song catsong = filteredSongs[index];
@@ -80,6 +82,8 @@ class _SongCardState extends ConsumerState<SongCard> {
                             },
                           ),
                           onTap: () async {
+                            ref.read(songSetterProvider.notifier).state =
+                                catsong;
                             ref.read(widescrnstateProvider.notifier).state =
                                 WideScrnState.song;
                           },

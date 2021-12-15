@@ -2,19 +2,13 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:foutain_desktop/models/bible_mdl.dart';
-
 import 'package:foutain_desktop/models/recent_srchs.dart';
-import 'package:foutain_desktop/models/song_mdl.dart';
 import 'package:foutain_desktop/utils/db_utils.dart';
 import 'package:foutain_desktop/utils/enums.dart';
-import 'package:foutain_desktop/utils/utilities.dart';
-import 'package:foutain_desktop/models/recent_srchs.dart';
 import 'package:foutain_desktop/utils/vrs_srch.dart';
 import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 

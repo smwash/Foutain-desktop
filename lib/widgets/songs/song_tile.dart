@@ -75,7 +75,6 @@ class SongTile extends ConsumerWidget {
         ),
         onTap: () async {
           ref.read(widescrnstateProvider.notifier).state = WideScrnState.song;
-          await ref.read(songDetailProvider.notifier).setSongDetail(catsong);
         },
       ),
     );

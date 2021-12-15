@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -30,7 +31,7 @@ class BibleVrsScreen extends ConsumerWidget {
                 centerTitle: true,
                 backgroundColor: Colors.white,
                 title: Text('${bible!.bkName} • ${bible.chapter}',
-                    style: TextStyle(color: Colors.black)),
+                    style: const TextStyle(color: Colors.black)),
                 actions: [
                   IconButton(
                     icon: Icon(Icons.fullscreen,
@@ -80,14 +81,13 @@ class BibleVrsScreen extends ConsumerWidget {
                             ),
                           ),
                           onTap: () async {
-                            ref.read(bibleVerseFlScrnProvider.notifier).state =
-                                bible;
+                            ref.read(bibleProvider.notifier).setBible(bible);
+                            ref
+                                .read(bibleversesProvider.notifier)
+                                .setBible(verses);
                             ref.read(mainScreenStateProvider.notifier).state =
                                 ScreenState.fullbible;
-                            await WindowManager.instance.setFullScreen(
-                                await WindowManager.instance.isFullScreen()
-                                    ? false
-                                    : true);
+                            await WindowManager.instance.setFullScreen(true);
                           }),
                     );
                   },
@@ -116,23 +116,65 @@ class FullScreenVerse extends ConsumerWidget {
   const FullScreenVerse({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final bible = ref.watch(bibleVerseFlScrnProvider);
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0.0,
-        backgroundColor: Colors.white,
-        actions: [
-          IconButton(
-              onPressed: () {
-                ref.read(mainScreenStateProvider.notifier).state =
-                    ScreenState.initial;
-              },
-              icon: Icon(Icons.fullscreen_exit,
-                  color: Colors.black, size: 35.sp)),
-          SizedBox(width: 20.w),
-        ],
-      ),
-      body: Container(
+    //Bible? bible = ref.watch(bibleVerseFlScrnProvider.state).state;
+    final bible = ref.watch(bibleProvider);
+    //final versesProvider = ref.watch(getVrsesProvider);
+    return RawKeyboardListener(
+      autofocus: true,
+      focusNode: FocusNode(),
+      onKey: (event) async {
+        if (event.isKeyPressed(LogicalKeyboardKey.escape)) {
+          await WindowManager.instance.setFullScreen(false);
+          ref.read(mainScreenStateProvider.notifier).state =
+              ScreenState.initial;
+        }
+        if (event.isKeyPressed(LogicalKeyboardKey.arrowRight)) {
+          final list = ref.read(bibleversesProvider);
+          if (bible!.verse != list.first.verse) {
+            String text = list
+                .where((e) =>
+                    e.verse == bible.verse + 1 &&
+                    e.chapter == bible.chapter &&
+                    e.bkName == bible.bkName)
+                .first
+                .text;
+            ref
+                .read(bibleProvider.notifier)
+                .setBible(bible.copyWith(verse: bible.verse + 1, text: text));
+          }
+        }
+        if (event.isKeyPressed(LogicalKeyboardKey.arrowLeft)) {
+          final list = ref.read(bibleversesProvider);
+          if (bible!.verse != list.last.verse) {
+            String text = list
+                .where((e) =>
+                    e.verse == bible.verse - 1 &&
+                    e.chapter == bible.chapter &&
+                    e.bkName == bible.bkName)
+                .first
+                .text;
+            ref
+                .read(bibleProvider.notifier)
+                .setBible(bible.copyWith(verse: bible.verse - 1, text: text));
+          }
+        }
+      },
+      child: Scaffold(
+        // appBar: AppBar(
+        //   elevation: 0.0,
+        //   backgroundColor: Colors.white,
+        //   actions: [
+        //     IconButton(
+        //         onPressed: () {
+        //           ref.read(mainScreenStateProvider.notifier).state =
+        //               ScreenState.initial;
+        //         },
+        //         icon: Icon(Icons.fullscreen_exit,
+        //             color: Colors.black, size: 35.sp)),
+        //     SizedBox(width: 20.w),
+        //   ],
+        // ),
+        body: Container(
           height: double.infinity,
           width: double.infinity,
           color: Colors.white,
@@ -159,9 +201,11 @@ class FullScreenVerse extends ConsumerWidget {
                   },
                 ),
               ),
-              Spacer(),
+              //Spacer(),
             ],
-          )),
+          ),
+        ),
+      ),
     );
   }
 }
