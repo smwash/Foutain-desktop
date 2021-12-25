@@ -8,7 +8,8 @@ enum MenuSelector {
   oldTest,
   newTest,
   favsongs,
-  favbible
+  favbible,
+  searchBible
 }
 enum TestaSelector { bothOldNew, oldTest, newTest }
 enum BookSelector { allBooks, single }

@@ -1,102 +1,115 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:foutain_desktop/models/bible_mdl.dart';
+import 'package:foutain_desktop/repositories/bible_repository.dart';
 import 'package:foutain_desktop/utils/enums.dart';
 
 import 'general_providers.dart';
 
-final getBooksProvider = StateNotifierProvider<GetBooksNotifier, List<Bible>>(
-    (ref) => GetBooksNotifier(ref));
+final bibleRepositoryProvider =
+    Provider<BibleRepository>((ref) => BibleRepository(ref.read));
+final setBibleProvider = StateProvider<Bible?>((_) => null);
+final setFullscnBibleProvider = StateProvider<Bible?>((_) => null);
+final fullScnbibleversesProvider = StateProvider<List<Bible>>((_) => []);
 
-final getBChaptersProvider =
-    StateNotifierProvider.family<GetBibleBkChaptersNotifier, List<Bible>, int>(
-        (ref, int book) => GetBibleBkChaptersNotifier(ref, book));
+final getBibleProvider =
+    StateNotifierProvider<GetBibleNotifier, AsyncValue<List<Bible>>>(
+        (ref) => GetBibleNotifier(ref.read));
 
-// final setBbleVrsesProvider =
-//     StateNotifierProvider.family<GetBibleVrsesNotifier, List<Bible>, Bible>(
-//         (ref, bible) => GetBibleVrsesNotifier(ref, bible));
+class GetBibleNotifier extends StateNotifier<AsyncValue<List<Bible>>> {
+  GetBibleNotifier(this._read) : super(const AsyncValue.loading()) {
+    getBible();
+  }
 
-final setBibleProvider = StateProvider<Bible?>((ref) => null);
-//final bibleVerseFlScrnProvider = StateProvider<Bible?>((ref) => null);
+  final Reader _read;
 
-final getVrsesProvider =
-    StateNotifierProvider<GetBibleVrsesNotifier, AsyncValue<List<Bible>>>(
-        (ref) {
-  final bible = ref.watch(setBibleProvider);
-  return GetBibleVrsesNotifier(ref, bible!);
+  Future<void> getBible() async {
+    try {
+      List<Bible> data = await _read(bibleRepositoryProvider).getAllBooks();
+      state = AsyncValue.data(data);
+    } on Exception catch (e) {
+      state = AsyncValue.error(e);
+    }
+  }
+
+  Future<void> updateBible(Bible b) async {
+    try {
+      await _read(bibleRepositoryProvider).updateBible(b);
+      state.whenData((items) {
+        state = AsyncValue.data([
+          for (final item in items)
+            if (item.id == b.id) b else item
+        ]);
+      });
+    } on Exception catch (e) {
+      state = AsyncValue.error(e);
+    }
+  }
+}
+
+final versesListProvider = Provider<List<Bible>>((ref) {
+  final bibleListState = ref.watch(getBibleProvider);
+  return bibleListState.maybeWhen(data: (data) => data, orElse: () => []);
 });
 
-final bibleProvider = StateNotifierProvider<SetBibleNotifier, Bible?>(
-    (ref) => SetBibleNotifier());
-final bibleversesProvider =
-    StateNotifierProvider<SetBibleVrsesNotifier, List<Bible>>(
-        (ref) => SetBibleVrsesNotifier());
+final chapterListProvider = StateProvider<List<Bible>>((ref) {
+  final bibleListState = ref.watch(getBibleProvider);
+  return bibleListState.maybeWhen(data: (data) => data, orElse: () => []);
+});
 
-class SetBibleNotifier extends StateNotifier<Bible?> {
-  SetBibleNotifier() : super(null);
+final testaListProvider = Provider<List<Bible>>((ref) {
+  final bibleListState = ref.watch(getBibleProvider);
+  return bibleListState.maybeWhen(data: (data) => data, orElse: () => []);
+});
 
-  void setBible(Bible b) {
-    state = b;
+final bibleBkmarkProvider = Provider<List<Bible>>((ref) {
+  final bibleListState = ref.watch(getBibleProvider);
+  return bibleListState.maybeWhen(data: (data) => data, orElse: () => []);
+});
+
+final bkmarkListProvider = Provider<AsyncValue<List<Bible>>>((ref) {
+  return AsyncValue.data(
+      ref.watch(bibleBkmarkProvider).where((e) => e.isBkMarked == 1).toList());
+});
+
+final bookChaptersProvider = Provider.family<List<Bible>, Bible>((ref, bible) {
+  return ref
+      .watch(chapterListProvider)
+      .where((e) => e.bkNumber == bible.bkNumber)
+      .toList();
+});
+
+final getBVersesByChapterProvider = Provider<List<Bible>>((ref) {
+  final bible = ref.watch(setBibleProvider);
+  return ref
+      .watch(versesListProvider)
+      .where((e) => e.bkNumber == bible!.bkNumber && e.chapter == bible.chapter)
+      .toList();
+});
+
+final getBooksProvider = Provider<List<Bible>>((ref) {
+  final menuState = ref.watch(menuSelectorProvider);
+  final query = ref.watch(searchQueryProvider);
+  List<Bible> listState = ref.watch(testaListProvider);
+  switch (menuState) {
+    case MenuSelector.oldTest:
+      listState =
+          listState.where((e) => e.bkNumber >= 1 && e.bkNumber <= 39).toList();
+      listState = query == 'query'
+          ? listState
+          : listState
+              .where((e) => e.bkName.toLowerCase().contains(query))
+              .toList();
+      return listState;
+    case MenuSelector.newTest:
+      listState =
+          listState.where((e) => e.bkNumber > 39 && e.bkNumber <= 66).toList();
+      listState = query == 'query'
+          ? listState
+          : listState
+              .where((e) => e.bkName.toLowerCase().contains(query))
+              .toList();
+      return listState;
+    default:
+      return listState;
   }
-}
-
-class SetBibleVrsesNotifier extends StateNotifier<List<Bible>> {
-  SetBibleVrsesNotifier() : super([]);
-
-  void setBible(List<Bible> b) {
-    state = b;
-  }
-}
-
-class GetBooksNotifier extends StateNotifier<List<Bible>> {
-  GetBooksNotifier(this._ref) : super([]) {
-    getBibleBooks();
-  }
-  final Ref _ref;
-
-  void getBibleBooks() async {
-    MenuSelector menustate = _ref.watch(menuSelectorProvider.state).state;
-    String query = _ref.watch(searchQueryProvider.state).state;
-
-    if (menustate == MenuSelector.oldTest) {
-      List<Bible> books = await _ref.watch(databaseProvider).getOldTest(1, 39);
-      state = query == 'query'
-          ? books
-          : books.where((e) => e.bkName.toLowerCase().contains(query)).toList();
-    }
-    if (menustate == MenuSelector.newTest) {
-      List<Bible> books = await _ref.watch(databaseProvider).getOldTest(40, 66);
-      state = query == 'query'
-          ? books
-          : books.where((e) => e.bkName.toLowerCase().contains(query)).toList();
-    }
-  }
-}
-
-class GetBibleBkChaptersNotifier extends StateNotifier<List<Bible>> {
-  GetBibleBkChaptersNotifier(this._ref, this.book) : super([]) {
-    getBkChapters();
-  }
-  final Ref _ref;
-  final int book;
-
-  void getBkChapters() async {
-    state = await _ref.watch(databaseProvider).getBkChapters(book);
-  }
-}
-
-class GetBibleVrsesNotifier extends StateNotifier<AsyncValue<List<Bible>>> {
-  GetBibleVrsesNotifier(this._ref, this._bible)
-      : super(const AsyncValue.loading()) {
-    getVerses();
-  }
-  final Ref _ref;
-  final Bible _bible;
-
-  void getVerses() async {
-    List<Bible> verses =
-        await _ref.watch(databaseProvider).getChaptVrss(_bible);
-    state = AsyncData(verses);
-  }
-}
-
-//final htmlDoc = parseHtmlDocument(content)
+});

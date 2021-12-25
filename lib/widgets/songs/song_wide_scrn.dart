@@ -9,6 +9,8 @@ import 'package:foutain_desktop/utils/extensions.dart';
 import 'package:foutain_desktop/utils/utilities.dart';
 import 'package:window_manager/window_manager.dart';
 
+import 'edit_song.dart';
+
 class SongWideScreen extends ConsumerStatefulWidget {
   const SongWideScreen({Key? key}) : super(key: key);
 
@@ -60,6 +62,12 @@ class _SongWideScreenState extends ConsumerState<SongWideScreen> {
                       song.copyWith(isFavorite: song.isFavorite == 1 ? 0 : 1));
                 },
               ),
+              // IconButton(
+              //   icon: Icon(Icons.edit, color: Theme.of(context).primaryColor),
+              //   onPressed: () {
+              //     EditSong.showDialog(context);
+              //   },
+              // ),
               IconButton(
                 icon: Icon(Icons.fullscreen,
                     color: Theme.of(context).primaryColor),

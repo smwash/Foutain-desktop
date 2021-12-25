@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 import 'enums.dart';
 
 String sngBkTitle(MenuSelector select) {
@@ -57,6 +59,21 @@ class BibleNmExtract {
     this.bkNum,
     this.bkName,
   );
+}
+
+List<Color> getMaterialColorShades(ColorSwatch color) {
+  return <Color>[
+    if (color[50] != null) color[50]!,
+    if (color[100] != null) color[100]!,
+    if (color[200] != null) color[200]!,
+    if (color[300] != null) color[300]!,
+    if (color[400] != null) color[400]!,
+    if (color[500] != null) color[500]!,
+    if (color[600] != null) color[600]!,
+    if (color[700] != null) color[700]!,
+    if (color[800] != null) color[800]!,
+    if (color[900] != null) color[900]!,
+  ];
 }
 
 List<BibleNmExtract> bibleShrtNm = [

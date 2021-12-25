@@ -1,12 +1,12 @@
 import 'dart:convert';
 
 class RecentSrch {
-  final int id;
+  final int? id;
   final int results;
   final String query;
 
   RecentSrch({
-    required this.id,
+    this.id,
     required this.results,
     required this.query,
   });

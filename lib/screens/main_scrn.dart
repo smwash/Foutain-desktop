@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:foutain_desktop/providers/bible_providers.dart';
 import 'package:foutain_desktop/providers/general_providers.dart';
 import 'package:foutain_desktop/utils/enums.dart';
-import 'package:foutain_desktop/widgets/bible/wide_scrn_verses.dart';
+import 'package:foutain_desktop/widgets/bible/bible_full_scrn.dart';
 import 'package:foutain_desktop/widgets/songs/songs_fullscrn.dart';
 
 import 'middle_scrn.dart';

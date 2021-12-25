@@ -16,67 +16,68 @@ class SongsByCategory extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final catSongs =
-        ref.watch(favSongsByCategoryProvider(ref.watch(categoryProvider)));
+    final category = ref.watch(categoryProvider);
+    final catSongs = ref.watch(favSongsByCategoryProvider(category));
+    print(ref.watch(mainFavSongsProvider).length);
     return ListView.builder(
       itemCount: catSongs.length,
       shrinkWrap: true,
       primary: false,
       itemBuilder: (BuildContext context, int index) {
         Song catsong = catSongs[index];
-        return ProviderScope(
-          overrides: [currentSong.overrideWithValue(catsong)],
-          child: const SongTile(),
+        return Padding(
+          //key: ValueKey(catsong.id),
+          padding: EdgeInsets.only(bottom: 5.h),
+          child: ListTile(
+            dense: true,
+            tileColor: Theme.of(context).canvasColor,
+            leading: CircleAvatar(
+              backgroundColor: Theme.of(context).primaryColor.withOpacity(0.17),
+              child: Text(
+                catsong.sngNumber.toString(),
+                style: TextStyle(
+                  color: Theme.of(context).primaryColor,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            title: Text(
+              catsong.title.toLowerCase().capitalizeFirstofEach,
+            ),
+            subtitle: Text(catsong.verse),
+            trailing: IconButton(
+              color: catsong.isFavorite == 1
+                  ? Theme.of(context).primaryColor
+                  : Theme.of(context).primaryColor.withOpacity(0.8),
+              icon: Icon(catsong.isFavorite == 1
+                  ? Icons.favorite
+                  : Icons.favorite_outline),
+              onPressed: () async {
+                await ref.read(songsListStateProvider.notifier).updateSong(
+                    catsong.copyWith(
+                        isFavorite: catsong.isFavorite == 1 ? 0 : 1));
+              },
+            ),
+            onTap: () {
+              ref.read(songSetterProvider.notifier).state = catsong;
+              ref.read(widescrnstateProvider.notifier).state =
+                  WideScrnState.song;
+            },
+          ),
         );
       },
     );
   }
 }
 
-class SongTile extends ConsumerWidget {
-  const SongTile({
-    Key? key,
-  }) : super(key: key);
+// class SongTile extends ConsumerWidget {
+//   const SongTile({
+//     Key? key,
+//   }) : super(key: key);
 
-  @override
-  Widget build(BuildContext context, ref) {
-    final catsong = ref.watch(currentSong);
-    return Padding(
-      key: ValueKey(catsong.id),
-      padding: EdgeInsets.only(bottom: 5.h),
-      child: ListTile(
-        dense: true,
-        tileColor: Theme.of(context).canvasColor,
-        leading: CircleAvatar(
-          backgroundColor: Theme.of(context).primaryColor.withOpacity(0.17),
-          child: Text(
-            catsong.sngNumber.toString(),
-            style: TextStyle(
-              color: Theme.of(context).primaryColor,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
-        title: Text(
-          catsong.title.toLowerCase().capitalizeFirstofEach,
-        ),
-        subtitle: Text(catsong.verse),
-        trailing: IconButton(
-          color: catsong.isFavorite == 1
-              ? Theme.of(context).primaryColor
-              : Theme.of(context).primaryColor.withOpacity(0.8),
-          icon: Icon(catsong.isFavorite == 1
-              ? Icons.favorite
-              : Icons.favorite_outline),
-          onPressed: () async {
-            await ref.read(songsListStateProvider.notifier).updateSong(
-                catsong.copyWith(isFavorite: catsong.isFavorite == 1 ? 0 : 1));
-          },
-        ),
-        onTap: () async {
-          ref.read(widescrnstateProvider.notifier).state = WideScrnState.song;
-        },
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context, ref) {
+//     final catsong = ref.watch(currentSong);
+
+//   }
+// }

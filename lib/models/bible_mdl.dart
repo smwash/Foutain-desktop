@@ -11,11 +11,11 @@ class Bible {
   final int? hasNotes;
   final String? notes;
   final int? isBkMarked;
-  final Color? hlgtColor;
-  final int? isHighlighted;
-  final DateTime? ntDtCreated;
-  final DateTime? bkmkDtCreated;
-  final DateTime? hglghtDtCreated;
+  // final Color? hlgtColor;
+  // final int? isHighlighted;
+  // final DateTime? ntDtCreated;
+  // final DateTime? bkmkDtCreated;
+  // final DateTime? hglghtDtCreated;
 
   Bible({
     required this.id,
@@ -27,11 +27,11 @@ class Bible {
     required this.hasNotes,
     this.notes,
     this.isBkMarked,
-    this.hlgtColor,
-    this.isHighlighted,
-    this.ntDtCreated,
-    this.bkmkDtCreated,
-    this.hglghtDtCreated,
+    // this.hlgtColor,
+    // this.isHighlighted,
+    // this.ntDtCreated,
+    // this.bkmkDtCreated,
+    // this.hglghtDtCreated,
   });
 
   Bible copyWith({
@@ -60,11 +60,11 @@ class Bible {
       hasNotes: hasNotes ?? this.hasNotes,
       notes: notes ?? this.notes,
       isBkMarked: isBkMarked ?? this.isBkMarked,
-      hlgtColor: hlgtColor ?? this.hlgtColor,
-      isHighlighted: isHighlighted ?? this.isHighlighted,
-      ntDtCreated: ntDtCreated ?? this.ntDtCreated,
-      bkmkDtCreated: bkmkDtCreated ?? this.bkmkDtCreated,
-      hglghtDtCreated: hglghtDtCreated ?? this.hglghtDtCreated,
+      // hlgtColor: hlgtColor ?? this.hlgtColor,
+      // isHighlighted: isHighlighted ?? this.isHighlighted,
+      // ntDtCreated: ntDtCreated ?? this.ntDtCreated,
+      // bkmkDtCreated: bkmkDtCreated ?? this.bkmkDtCreated,
+      // hglghtDtCreated: hglghtDtCreated ?? this.hglghtDtCreated,
     );
   }
 
@@ -76,14 +76,14 @@ class Bible {
       'chapter': chapter,
       'bkNumber': bkNumber,
       'bkName': bkName,
-      'hasNotes': hasNotes,
-      'notes': notes,
+      //'hasNotes': hasNotes,
+      //'notes': notes,
       'isBkMarked': isBkMarked,
-      'hlgtColor': hlgtColor!.value,
-      'isHighlighted': isHighlighted,
-      'ntDtCreated': ntDtCreated!.millisecondsSinceEpoch,
-      'bkmkDtCreated': bkmkDtCreated!.millisecondsSinceEpoch,
-      'hglghtDtCreated': hglghtDtCreated!.millisecondsSinceEpoch
+      // 'hlgtColor': hlgtColor!.value,
+      // 'isHighlighted': isHighlighted,
+      // 'ntDtCreated': ntDtCreated!.millisecondsSinceEpoch,
+      // 'bkmkDtCreated': bkmkDtCreated!.millisecondsSinceEpoch,
+      // 'hglghtDtCreated': hglghtDtCreated!.millisecondsSinceEpoch
     };
   }
 
@@ -98,17 +98,17 @@ class Bible {
       hasNotes: map['hasNotes'] ?? 0,
       notes: map['notes'] ?? '',
       isBkMarked: map['isBkMarked'] ?? 0,
-      hlgtColor: map['hlgtColor'] != null ? Color(map['hlgtColor']) : null,
-      isHighlighted: map['isHighlighted'] ?? 0,
-      ntDtCreated: map['ntDtCreated'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['ntDtCreated'])
-          : null,
-      bkmkDtCreated: map['bkmkDtCreated'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['bkmkDtCreated'])
-          : null,
-      hglghtDtCreated: map['hglghtDtCreated'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['hglghtDtCreated'])
-          : null,
+      // hlgtColor: map['hlgtColor'] != null ? Color(map['hlgtColor']) : null,
+      // isHighlighted: map['isHighlighted'] ?? 0,
+      // ntDtCreated: map['ntDtCreated'] != null
+      //     ? DateTime.fromMillisecondsSinceEpoch(map['ntDtCreated'])
+      //     : null,
+      // bkmkDtCreated: map['bkmkDtCreated'] != null
+      //     ? DateTime.fromMillisecondsSinceEpoch(map['bkmkDtCreated'])
+      //     : null,
+      // hglghtDtCreated: map['hglghtDtCreated'] != null
+      //     ? DateTime.fromMillisecondsSinceEpoch(map['hglghtDtCreated'])
+      //     : null,
     );
   }
 
@@ -118,7 +118,7 @@ class Bible {
 
   @override
   String toString() {
-    return 'Bible(id: $id, verse: $verse, text: $text, chapter: $chapter, bkNumber: $bkNumber, bkName: $bkName, hasNotes: $hasNotes, notes: $notes, isBkMarked: $isBkMarked, hlgtColor: $hlgtColor, isHighlighted: $isHighlighted, ntDtCreated: $ntDtCreated, bkmkDtCreated: $bkmkDtCreated, hglghtDtCreated: $hglghtDtCreated)';
+    return 'Bible(id: $id, verse: $verse, text: $text, chapter: $chapter, bkNumber: $bkNumber, bkName: $bkName, hasNotes: $hasNotes, notes: $notes, isBkMarked: $isBkMarked)';
   }
 
   @override
@@ -134,12 +134,12 @@ class Bible {
         other.bkName == bkName &&
         other.hasNotes == hasNotes &&
         other.notes == notes &&
-        other.isBkMarked == isBkMarked &&
-        other.hlgtColor == hlgtColor &&
-        other.isHighlighted == isHighlighted &&
-        other.ntDtCreated == ntDtCreated &&
-        other.bkmkDtCreated == bkmkDtCreated &&
-        other.hglghtDtCreated == hglghtDtCreated;
+        other.isBkMarked == isBkMarked;
+    // other.hlgtColor == hlgtColor &&
+    // other.isHighlighted == isHighlighted &&
+    // other.ntDtCreated == ntDtCreated &&
+    // other.bkmkDtCreated == bkmkDtCreated &&
+    // other.hglghtDtCreated == hglghtDtCreated;
   }
 
   @override
@@ -152,11 +152,11 @@ class Bible {
         bkName.hashCode ^
         hasNotes.hashCode ^
         notes.hashCode ^
-        isBkMarked.hashCode ^
-        hlgtColor.hashCode ^
-        isHighlighted.hashCode ^
-        ntDtCreated.hashCode ^
-        bkmkDtCreated.hashCode ^
-        hglghtDtCreated.hashCode;
+        isBkMarked.hashCode;
+    // hlgtColor.hashCode ^
+    // isHighlighted.hashCode ^
+    // ntDtCreated.hashCode ^
+    // bkmkDtCreated.hashCode ^
+    // hglghtDtCreated.hashCode;
   }
 }

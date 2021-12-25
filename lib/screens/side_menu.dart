@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:foutain_desktop/providers/general_providers.dart';
 import 'package:foutain_desktop/utils/enums.dart';
+import 'package:foutain_desktop/widgets/settings.dart';
 import 'package:foutain_desktop/widgets/songs/sd_menu_tile.dart';
 
 class SideMenu extends ConsumerWidget {
@@ -121,11 +122,24 @@ class SideMenu extends ConsumerWidget {
                   MousedListTile(
                       menuSelector: MenuSelector.oldTest,
                       label: 'Old Testament',
-                      onTap: () => sngbkSelector.state = MenuSelector.oldTest),
+                      onTap: () {
+                        ref.read(searchQueryProvider.notifier).state = 'query';
+                        sngbkSelector.state = MenuSelector.oldTest;
+                      }),
                   MousedListTile(
                       menuSelector: MenuSelector.newTest,
                       label: 'New Testament',
-                      onTap: () => sngbkSelector.state = MenuSelector.newTest),
+                      onTap: () {
+                        ref.read(searchQueryProvider.notifier).state = 'query';
+                        sngbkSelector.state = MenuSelector.newTest;
+                      }),
+                  MousedListTile(
+                      menuSelector: MenuSelector.searchBible,
+                      label: 'Search',
+                      onTap: () {
+                        ref.read(searchQueryProvider.notifier).state = 'query';
+                        sngbkSelector.state = MenuSelector.searchBible;
+                      }),
                 ],
               ),
             ),
@@ -178,7 +192,7 @@ class SideMenu extends ConsumerWidget {
                 dense: true,
                 trailing: Icon(Icons.arrow_forward_ios,
                     size: 12.sp, color: Colors.black),
-                onTap: () {},
+                onTap: () => Settings.showDialog(context),
               ),
             ),
           ],

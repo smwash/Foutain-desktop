@@ -1,3 +1,4 @@
+import 'package:foutain_desktop/models/bible_mdl.dart';
 import 'package:foutain_desktop/models/song_mdl.dart';
 
 extension Iterables<E> on Iterable<E> {
@@ -8,11 +9,20 @@ extension Iterables<E> on Iterable<E> {
 }
 
 Map<int, List<Song>> songh(List<Song> songs) {
-  final releaseDateMap = songs.groupBy((e) => e.vrsNumber);
-  return releaseDateMap;
+  // if (songs.first.hasChorus == 1) {
+  //   final list = songs.groupBy((e) => e.vrsNumber).values.toList()[1];
+  //   List.generate(songs.groupBy((e) => e.vrsNumber).values.length * 2, (index) {
+  //     if (index.isEven) {
+  //       songs.insertAll(index + 2, list);
+  //     }
+  //   });
+  // }
+  final sortedSongs = songs.groupBy((e) => e.vrsNumber);
+  //print(sortedSongs.length);
+  return sortedSongs;
 }
 
-Map<String, List<Song>> groupBySongCategory(List<Song> songs) {
-  final sortedSongs = songs.groupBy((e) => e.category);
-  return sortedSongs;
+Map<int, List<Bible>> groupBibleByBkNo(List<Bible> songs) {
+  final sortedBible = songs.groupBy((e) => e.bkNumber);
+  return sortedBible;
 }
